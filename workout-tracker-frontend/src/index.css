@@ -1,0 +1,118 @@
+/* Global Styles */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #e3f2fd; /* Light Blue */
+  color: #333;
+  margin: 0;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+/* Main Container */
+.workout-container {
+  max-width: 500px;
+  width: 100%;
+  background: #ffffff; /* White */
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+/* Workout Item */
+.workout-item {
+  background: #f9f9f9; /* Light Gray */
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Workout Text */
+.workout-item p {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+}
+
+/* Buttons */
+.workout-item button {
+  margin-left: 10px;
+  padding: 8px 12px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 5px;
+  transition: 0.3s;
+}
+
+/* Edit Button */
+.workout-item .edit-btn {
+  background-color: #ff9800; /* Orange */
+  color: white;
+}
+
+.workout-item .edit-btn:hover {
+  background-color: #f57c00;
+}
+
+/* Delete Button */
+.workout-item .delete-btn {
+  background-color: #e53935; /* Red */
+  color: white;
+}
+
+.workout-item .delete-btn:hover {
+  background-color: #c62828;
+}
+
+/* Form Styling */
+form {
+  background: #ffffff;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+form input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+/* Submit Button */
+form button {
+  width: 100%;
+  padding: 10px;
+  background-color: #4caf50; /* Green */
+  color: white;
+  border: none;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+form button:hover {
+  background-color: #388e3c;
+}
+
+/* Header Styling */
+h1 {
+  font-size: 24px;
+  color: #1565c0; /* Dark Blue */
+  margin-bottom: 15px;
+}
