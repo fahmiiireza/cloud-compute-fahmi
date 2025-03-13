@@ -10,6 +10,44 @@ body {
   align-items: center;
   min-height: 100vh;
 }
+.auth-container {
+  max-width: 400px;
+  margin: 50px auto;
+  padding: 20px;
+  background: white;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+}
+
+.auth-container h2 {
+  text-align: center;
+}
+
+.auth-container form {
+  display: flex;
+  flex-direction: column;
+}
+
+.auth-container input {
+  padding: 10px;
+  margin: 5px 0;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+}
+
+.auth-container button {
+  padding: 10px;
+  background: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 3px;
+}
+
+.auth-container button:hover {
+  background: #0056b3;
+}
+
 
 /* Main Container */
 .workout-container {
