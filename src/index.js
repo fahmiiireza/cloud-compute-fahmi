@@ -14,7 +14,7 @@ app.use(express.json());
 app.use("/workouts", workoutRoutes);
 app.use("/api/auth", authRoutes);
 
-const PORT = process.env.PORT || 5001;
+const PORT = process.env.PORT || 5011;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
