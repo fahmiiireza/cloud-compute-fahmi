@@ -150,5 +150,4 @@ dist
 # SvelteKit build / generate output
 .svelte-kit
 
-# End of https://www.toptal.com/developers/gitignore/api/firebase,node
 src/config/firebaseServiceAccountKey.json

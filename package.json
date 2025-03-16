@@ -10,7 +10,7 @@
   },
   "type": "module",
   "scripts": {
-  "start": "node index.js"
+  "start": "node src/index.js",
+  "production": "npm i && cd workout-tracker-frontend && npm i && npm run build"
 }
-
 }
