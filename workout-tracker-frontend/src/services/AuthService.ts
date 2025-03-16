@@ -1,24 +1,31 @@
-const API_URL = import.meta.env.VITE_API_URL;
+import { auth } from "../../firebase";
+import { createUserWithEmailAndPassword,signInWithEmailAndPassword, sendEmailVerification, updateProfile } from "firebase/auth";
 
 export const register = async (displayName: string, email: string, password: string) => {
-    try {
-      const response = await fetch(`${API_URL}/api/auth/register`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ displayName, email, password }),
-      });
-      return await response.json();
-    } catch (error) {
-      return { error: "Failed to register. Please try again later." };
-    }
-  };
-  
+  try {
+    // Create a new user with email and password
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    const user = userCredential.user;
+
+    // Update the user's display name
+    await updateProfile(user, { displayName });
+
+    // Send email verification
+    await sendEmailVerification(user);
+
+    return { user, message: "Verification email sent. Please check your inbox." };
+  } catch (error) {
+    return { error: (error as Error).message };  
+  }
+};
+
 
 export const login = async (email: string, password: string) => {
-  const response = await fetch(`${API_URL}/api/auth/login`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email, password }),
-  });
-  return response.json();
+  try {
+    // Sign in the user
+    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    return { user: userCredential.user };
+  } catch (error) {
+    return { error: (error as Error).message };  
+  }
 };

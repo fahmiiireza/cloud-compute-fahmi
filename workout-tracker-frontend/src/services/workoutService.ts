@@ -1,4 +1,5 @@
-const API_URL = import.meta.env.VITE_API_URL;
+import { db } from "../../firebase";
+import { collection, addDoc, getDocs, doc, updateDoc, deleteDoc } from "firebase/firestore";
 
 export interface Workout {
   id: string;
@@ -6,35 +7,31 @@ export interface Workout {
   duration: number;
 }
 
+const workoutsCollection = collection(db, "workouts");
+
 // Fetch workouts
 export const getWorkouts = async (): Promise<Workout[]> => {
-  const response = await fetch(`${API_URL}/workouts`);
-  return response.json();
+  const querySnapshot = await getDocs(workoutsCollection);
+  return querySnapshot.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  })) as Workout[];
 };
 
 // Add workout
 export const addWorkout = async (workout: { name: string; duration: number }): Promise<Workout> => {
-  const response = await fetch(`${API_URL}/workouts`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(workout),
-  });
-  return response.json();
+  const docRef = await addDoc(workoutsCollection, workout);
+  return { id: docRef.id, ...workout };
 };
 
+// Update workout
 export const updateWorkout = async (id: string, updatedData: { name: string; duration: number }) => {
-    const response = await fetch(`http://localhost:5000/workouts/${id}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(updatedData),
-    });
-    if (!response.ok) throw new Error("Failed to update workout");
-  };
-  
+  const workoutDoc = doc(db, "workouts", id);
+  await updateDoc(workoutDoc, updatedData);
+};
 
 // Delete workout
 export const deleteWorkout = async (id: string): Promise<void> => {
-  await fetch(`${API_URL}/workouts/${id}`, { method: "DELETE" });
+  const workoutDoc = doc(db, "workouts", id);
+  await deleteDoc(workoutDoc);
 };
