@@ -16,7 +16,7 @@ const Login = () => {
     } else {
       toast.success("Login successful!");
       localStorage.setItem("token", response.token);
-      navigate("/");
+      navigate("/home");
     }
   };
 
