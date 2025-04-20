@@ -10,6 +10,7 @@ import { toast } from "react-toastify";
 import "./Home.css";
 
 const Home = () => {
+  console.log("Home component is rendering...");
   const [workouts, setWorkouts] = useState<Workout[]>([]);
   const [units, setUnits] = useState<WorkoutUnit[]>([]);
   const navigate = useNavigate();
@@ -26,11 +27,13 @@ const Home = () => {
   const fetchWorkoutUnits = async () => {
     try {
       const data = await getWorkoutUnits();
+      console.log("🏋️ Units fetched in Home:", data); // 👈 debug log
       setUnits(data);
     } catch (error) {
       toast.error("Failed to load workout units");
     }
   };
+  
 
   const handleLogout = async () => {
     try {

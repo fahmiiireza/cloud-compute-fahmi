@@ -21,6 +21,7 @@ const WorkoutPage = () => {
   const fetchUnits = async () => {
     try {
       const data = await getWorkoutUnits();
+      console.log("Fetched units:", data); // ✅ Add this line to debug
       setUnits(data);
     } catch (error) {
       toast.error("Failed to fetch units");
@@ -34,6 +35,7 @@ const WorkoutPage = () => {
 
   return (
     <div>
+      {/* ✅ Make sure units is passed */}
       <AddWorkout onWorkoutAdded={fetchWorkouts} units={units} />
       <WorkoutList
         workouts={workouts}

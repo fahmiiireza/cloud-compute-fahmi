@@ -14,6 +14,7 @@ const unitsCollection = collection(db, "workout_units");
 // Get all workout units
 export const getWorkoutUnits = async (): Promise<WorkoutUnit[]> => {
   const snapshot = await getDocs(unitsCollection);
+  console.log("📦 Raw unit docs:", snapshot.docs.map((doc) => doc.data())); // 👈 ADD THIS
   return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() } as WorkoutUnit));
 };
 
