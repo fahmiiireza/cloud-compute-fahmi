@@ -4,18 +4,14 @@ import { auth } from "../../firebase";
 import { signOut } from "firebase/auth";
 import WorkoutList from "../components/WorkoutList";
 import AddWorkout from "../components/AddWorkout";
-import { getWorkouts } from "../services/workoutService";
+import { getWorkouts, Workout } from "../services/workoutService";
+import { getWorkoutUnits, WorkoutUnit } from "../services/unitService";
 import { toast } from "react-toastify";
-import "./Home.css"; // Make sure to create this file if not exists
-
-interface Workout {
-  id: string;
-  name: string;
-  duration: number;
-}
+import "./Home.css";
 
 const Home = () => {
   const [workouts, setWorkouts] = useState<Workout[]>([]);
+  const [units, setUnits] = useState<WorkoutUnit[]>([]);
   const navigate = useNavigate();
 
   const fetchWorkouts = async () => {
@@ -24,6 +20,15 @@ const Home = () => {
       setWorkouts(data);
     } catch (error) {
       toast.error("Failed to load workouts");
+    }
+  };
+
+  const fetchWorkoutUnits = async () => {
+    try {
+      const data = await getWorkoutUnits();
+      setUnits(data);
+    } catch (error) {
+      toast.error("Failed to load workout units");
     }
   };
 
@@ -43,6 +48,7 @@ const Home = () => {
         navigate("/login");
       } else {
         fetchWorkouts();
+        fetchWorkoutUnits();
       }
     });
 
@@ -56,11 +62,12 @@ const Home = () => {
         <button className="logout-button" onClick={handleLogout}>Logout</button>
       </header>
 
-      <AddWorkout onWorkoutAdded={fetchWorkouts} />
+      <AddWorkout onWorkoutAdded={fetchWorkouts} units={units} />
       <WorkoutList
         workouts={workouts}
         setWorkouts={setWorkouts}
         onEditFinish={fetchWorkouts}
+        units={units}
       />
     </div>
   );
