@@ -1,17 +1,13 @@
 import { useEffect, useState } from "react";
-import { getWorkouts } from "../services/workoutService";
+import { getWorkouts, Workout } from "../services/workoutService";
+import { getWorkoutUnits, WorkoutUnit } from "../services/unitService";
 import AddWorkout from "./AddWorkout";
 import WorkoutList from "./WorkoutList";
 import { toast } from "react-toastify";
 
-export interface Workout {
-  id: string;
-  name: string;
-  duration: number;
-}
-
 const WorkoutPage = () => {
   const [workouts, setWorkouts] = useState<Workout[]>([]);
+  const [units, setUnits] = useState<WorkoutUnit[]>([]);
 
   const fetchWorkouts = async () => {
     try {
@@ -22,14 +18,29 @@ const WorkoutPage = () => {
     }
   };
 
+  const fetchUnits = async () => {
+    try {
+      const data = await getWorkoutUnits();
+      setUnits(data);
+    } catch (error) {
+      toast.error("Failed to fetch units");
+    }
+  };
+
   useEffect(() => {
     fetchWorkouts();
+    fetchUnits();
   }, []);
 
   return (
     <div>
-      <AddWorkout onWorkoutAdded={fetchWorkouts} />
-      <WorkoutList workouts={workouts} setWorkouts={setWorkouts} onEditFinish={fetchWorkouts} />
+      <AddWorkout onWorkoutAdded={fetchWorkouts} units={units} />
+      <WorkoutList
+        workouts={workouts}
+        setWorkouts={setWorkouts}
+        onEditFinish={fetchWorkouts}
+        units={units}
+      />
     </div>
   );
 };

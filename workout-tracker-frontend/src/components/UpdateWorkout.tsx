@@ -1,14 +1,24 @@
 import { useState } from "react";
 import { updateWorkout } from "../services/workoutService";
 import { toast } from "react-toastify";
+import { WorkoutUnit } from "../services/unitService";
 
-const UpdateWorkout = ({ workout, onWorkoutUpdated }: { workout: any; onWorkoutUpdated: () => void }) => {
+const UpdateWorkout = ({
+  workout,
+  onWorkoutUpdated,
+  units,
+}: {
+  workout: any;
+  onWorkoutUpdated: () => void;
+  units: WorkoutUnit[];
+}) => {
   const [name, setName] = useState(workout.name);
-  const [duration, setDuration] = useState(workout.duration);
+  const [amount, setAmount] = useState(workout.amount);
+  const [unitId, setUnitId] = useState(workout.unitId);
 
   const handleUpdate = async () => {
     try {
-      await updateWorkout(workout.id, { name, duration });
+      await updateWorkout(workout.id, { name, amount, unitId });
       toast.success("Workout updated!");
       onWorkoutUpdated();
     } catch {
@@ -18,9 +28,36 @@ const UpdateWorkout = ({ workout, onWorkoutUpdated }: { workout: any; onWorkoutU
 
   return (
     <div className="bg-gray-100 p-4 rounded mt-2">
-      <input className="border p-2 w-full" type="text" value={name} onChange={(e) => setName(e.target.value)} />
-      <input className="border p-2 w-full mt-2" type="number" value={duration} onChange={(e) => setDuration(Number(e.target.value))} />
-      <button className="bg-green-500 text-white p-2 w-full mt-2" onClick={handleUpdate}>Update</button>
+      <input
+        className="border p-2 w-full"
+        type="text"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+      />
+      <input
+        className="border p-2 w-full mt-2"
+        type="number"
+        value={amount}
+        onChange={(e) => setAmount(Number(e.target.value))}
+      />
+      <select
+        className="border p-2 w-full mt-2"
+        value={unitId}
+        onChange={(e) => setUnitId(e.target.value)}
+      >
+        <option value="">Select Unit</option>
+        {units.map((unit) => (
+          <option key={unit.id} value={unit.id}>
+            {unit.label}
+          </option>
+        ))}
+      </select>
+      <button
+        className="bg-green-500 text-white p-2 w-full mt-2"
+        onClick={handleUpdate}
+      >
+        Update
+      </button>
     </div>
   );
 };

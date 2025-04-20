@@ -2,23 +2,27 @@ import { useState } from "react";
 import { deleteWorkout, updateWorkout } from "../services/workoutService";
 import { toast } from "react-toastify";
 import "./WorkoutList.css";
+import { WorkoutUnit } from "../services/unitService";
 
 interface Workout {
   id: string;
   name: string;
-  duration: number;
+  amount: number;
+  unitId: string;
 }
 
 interface WorkoutListProps {
   workouts: Workout[];
   setWorkouts: React.Dispatch<React.SetStateAction<Workout[]>>;
   onEditFinish: () => void;
+  units: WorkoutUnit[];
 }
 
-const WorkoutList = ({ workouts, setWorkouts, onEditFinish }: WorkoutListProps) => {
+const WorkoutList = ({ workouts, setWorkouts, onEditFinish, units }: WorkoutListProps) => {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [updatedName, setUpdatedName] = useState("");
-  const [updatedDuration, setUpdatedDuration] = useState<number>(0);
+  const [updatedAmount, setUpdatedAmount] = useState<number>(0);
+  const [updatedUnitId, setUpdatedUnitId] = useState<string>("");
 
   const handleDelete = async (id: string) => {
     try {
@@ -33,23 +37,33 @@ const WorkoutList = ({ workouts, setWorkouts, onEditFinish }: WorkoutListProps) 
   const handleEdit = (workout: Workout) => {
     setEditingId(workout.id);
     setUpdatedName(workout.name);
-    setUpdatedDuration(workout.duration);
+    setUpdatedAmount(workout.amount);
+    setUpdatedUnitId(workout.unitId);
   };
 
   const handleUpdate = async (id: string) => {
-    if (!updatedName || updatedDuration <= 0) {
+    if (!updatedName || updatedAmount <= 0 || !updatedUnitId) {
       toast.error("Invalid workout details");
       return;
     }
 
     try {
-      await updateWorkout(id, { name: updatedName, duration: updatedDuration });
+      await updateWorkout(id, {
+        name: updatedName,
+        amount: updatedAmount,
+        unitId: updatedUnitId,
+      });
       toast.success("Workout updated!");
       setEditingId(null);
       onEditFinish(); // Refresh the workout list
     } catch (error) {
       toast.error("Failed to update workout");
     }
+  };
+
+  const getUnitName = (unitId: string) => {
+    const unit = units.find((u) => u.id === unitId);
+    return unit ? unit.label : "Unknown unit";
   };
 
   return (
@@ -67,16 +81,28 @@ const WorkoutList = ({ workouts, setWorkouts, onEditFinish }: WorkoutListProps) 
               />
               <input
                 type="number"
-                value={updatedDuration}
-                onChange={(e) => setUpdatedDuration(Number(e.target.value))}
+                value={updatedAmount}
+                onChange={(e) => setUpdatedAmount(Number(e.target.value))}
               />
+              <select
+                value={updatedUnitId}
+                onChange={(e) => setUpdatedUnitId(e.target.value)}
+              >
+                <option value="">Select Unit</option>
+                {units.map((unit) => (
+                  <option key={unit.id} value={unit.id}>
+                    {unit.label}
+                  </option>
+                ))}
+              </select>
               <button onClick={() => handleUpdate(workout.id)}>Save</button>
               <button onClick={() => setEditingId(null)}>Cancel</button>
             </div>
           ) : (
             <div>
               <p>
-                <strong>{workout.name}</strong> - {workout.duration} min
+                <strong>{workout.name}</strong> - {workout.amount}{" "}
+                {getUnitName(workout.unitId)}
               </p>
               <button onClick={() => handleEdit(workout)}>Edit</button>
               <button onClick={() => handleDelete(workout.id)}>Delete</button>

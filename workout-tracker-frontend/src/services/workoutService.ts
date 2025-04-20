@@ -14,8 +14,10 @@ import {
 export interface Workout {
   id: string;
   name: string;
-  duration: number;
+  amount: number;
+  unitId: string;
 }
+
 
 const workoutsCollection = collection(db, "workouts");
 
@@ -33,30 +35,17 @@ export const getWorkouts = async () => {
   })) as Workout[];
 };
 
-// Add workout
-export const addWorkout = async (workout: { name: string; duration: number }): Promise<Workout> => {
+export const addWorkout = async (workout: { name: string; amount: number; unitId: string }) => {
   const user = auth.currentUser;
   if (!user) throw new Error("User not authenticated");
 
-  const docRef = await addDoc(workoutsCollection, {
-    ...workout,
-    uid: user.uid, // 👈 attach UID here
-  });
-
-  return { id: docRef.id, ...workout };
+  const newWorkout = { ...workout, uid: user.uid };
+  const docRef = await addDoc(workoutsCollection, newWorkout);
+  return { id: docRef.id, ...newWorkout };
 };
 
-
-// Update workout
-export const updateWorkout = async (id: string, updatedData: { name: string; duration: number }) => {
-  const user = auth.currentUser;
-  if (!user) throw new Error("User not authenticated");
-
+export const updateWorkout = async (id: string, updatedData: { name: string; amount: number; unitId: string }) => {
   const workoutDoc = doc(db, "workouts", id);
-  const docSnapshot = await getDocs(query(collection(db, "workouts"), where("__name__", "==", id), where("uid", "==", user.uid)));
-
-  if (docSnapshot.empty) throw new Error("Unauthorized to update this workout");
-
   await updateDoc(workoutDoc, updatedData);
 };
 

@@ -1,0 +1,71 @@
+.add-workout-unit-form {
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+    margin: 10px;
+  }
+  
+  .add-workout-unit-form input {
+    padding: 8px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+  }
+  
+  .add-workout-unit-form button {
+    padding: 8px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .add-workout-unit-form button:hover {
+    background-color: #45a049;
+  }
+  
+  .workout-unit-list {
+    margin: 10px;
+  }
+  
+  .workout-unit-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px;
+    margin-bottom: 8px;
+    background-color: #f4f4f4;
+    border-radius: 4px;
+  }
+  
+  .workout-unit-item button {
+    background-color: red;
+    color: white;
+    padding: 5px;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .workout-unit-item button:hover {
+    background-color: #e60000;
+  }
+  
+  .update-workout-unit {
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px;
+  }
+  
+  .update-workout-unit input {
+    padding: 8px;
+    margin-bottom: 10px;
+  }
+  
+  .update-workout-unit button {
+    padding: 8px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
