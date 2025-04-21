@@ -2,23 +2,27 @@ import { useState } from "react";
 import { updateWorkout } from "../services/workoutService";
 import { toast } from "react-toastify";
 import { WorkoutUnit } from "../services/unitService";
+import { Location } from "../services/locationService";
 
 const UpdateWorkout = ({
   workout,
   onWorkoutUpdated,
   units,
+  locations,
 }: {
   workout: any;
   onWorkoutUpdated: () => void;
   units: WorkoutUnit[];
+  locations: Location[];
 }) => {
   const [name, setName] = useState(workout.name);
   const [amount, setAmount] = useState(workout.amount);
   const [unitId, setUnitId] = useState(workout.unitId);
+  const [locationId, setLocationId] = useState(workout.locationId);
 
   const handleUpdate = async () => {
     try {
-      await updateWorkout(workout.id, { name, amount, unitId });
+      await updateWorkout(workout.id, { name, amount, unitId, locationId });
       toast.success("Workout updated!");
       onWorkoutUpdated();
     } catch {
@@ -49,6 +53,18 @@ const UpdateWorkout = ({
         {units.map((unit) => (
           <option key={unit.id} value={unit.id}>
             {unit.label}
+          </option>
+        ))}
+      </select>
+      <select
+        className="border p-2 w-full mt-2"
+        value={locationId}
+        onChange={(e) => setLocationId(e.target.value)}
+      >
+        <option value="">Select Location</option>
+        {locations.map((location) => (
+          <option key={location.id} value={location.id}>
+            {location.label}
           </option>
         ))}
       </select>

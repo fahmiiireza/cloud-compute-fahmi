@@ -16,6 +16,7 @@ export interface Workout {
   name: string;
   amount: number;
   unitId: string;
+  locationId: string; 
 }
 
 
@@ -35,7 +36,7 @@ export const getWorkouts = async () => {
   })) as Workout[];
 };
 
-export const addWorkout = async (workout: { name: string; amount: number; unitId: string }) => {
+export const addWorkout = async (workout: { name: string; amount: number; unitId: string; locationId: string }) => {
   const user = auth.currentUser;
   if (!user) throw new Error("User not authenticated");
 
@@ -44,7 +45,7 @@ export const addWorkout = async (workout: { name: string; amount: number; unitId
   return { id: docRef.id, ...newWorkout };
 };
 
-export const updateWorkout = async (id: string, updatedData: { name: string; amount: number; unitId: string }) => {
+export const updateWorkout = async (id: string, updatedData: { name: string; amount: number; unitId: string; locationId: string }) => {
   const workoutDoc = doc(db, "workouts", id);
   await updateDoc(workoutDoc, updatedData);
 };

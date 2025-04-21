@@ -1,28 +1,24 @@
 import { useState } from "react";
-import { deleteWorkout, updateWorkout } from "../services/workoutService";
+import { deleteWorkout, updateWorkout, Workout } from "../services/workoutService";
 import { toast } from "react-toastify";
 import "./WorkoutList.css";
 import { WorkoutUnit } from "../services/unitService";
-
-interface Workout {
-  id: string;
-  name: string;
-  amount: number;
-  unitId: string;
-}
+import { Location } from "../services/locationService";
 
 interface WorkoutListProps {
   workouts: Workout[];
   setWorkouts: React.Dispatch<React.SetStateAction<Workout[]>>;
   onEditFinish: () => void;
   units: WorkoutUnit[];
+  locations: Location[];
 }
 
-const WorkoutList = ({ workouts, setWorkouts, onEditFinish, units }: WorkoutListProps) => {
+const WorkoutList = ({ workouts, setWorkouts, onEditFinish, units, locations }: WorkoutListProps) => {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [updatedName, setUpdatedName] = useState("");
   const [updatedAmount, setUpdatedAmount] = useState<number>(0);
   const [updatedUnitId, setUpdatedUnitId] = useState<string>("");
+  const [updatedLocationId, setUpdatedLocationId] = useState<string>("");
 
   const handleDelete = async (id: string) => {
     try {
@@ -39,6 +35,7 @@ const WorkoutList = ({ workouts, setWorkouts, onEditFinish, units }: WorkoutList
     setUpdatedName(workout.name);
     setUpdatedAmount(workout.amount);
     setUpdatedUnitId(workout.unitId);
+    setUpdatedLocationId(workout.locationId || "");
   };
 
   const handleUpdate = async (id: string) => {
@@ -52,10 +49,11 @@ const WorkoutList = ({ workouts, setWorkouts, onEditFinish, units }: WorkoutList
         name: updatedName,
         amount: updatedAmount,
         unitId: updatedUnitId,
+        locationId: updatedLocationId,
       });
       toast.success("Workout updated!");
       setEditingId(null);
-      onEditFinish(); // Refresh the workout list
+      onEditFinish();
     } catch (error) {
       toast.error("Failed to update workout");
     }
@@ -64,6 +62,12 @@ const WorkoutList = ({ workouts, setWorkouts, onEditFinish, units }: WorkoutList
   const getUnitName = (unitId: string) => {
     const unit = units.find((u) => u.id === unitId);
     return unit ? unit.label : "Unknown unit";
+  };
+
+  const getLocationName = (locationId?: string) => {
+    if (!locationId) return "No location";
+    const location = locations.find((l) => l.id === locationId);
+    return location ? location.label : "Unknown location";
   };
 
   return (
@@ -95,6 +99,17 @@ const WorkoutList = ({ workouts, setWorkouts, onEditFinish, units }: WorkoutList
                   </option>
                 ))}
               </select>
+              <select
+                value={updatedLocationId}
+                onChange={(e) => setUpdatedLocationId(e.target.value)}
+              >
+                <option value="">Select Location</option>
+                {locations.map((location) => (
+                  <option key={location.id} value={location.id}>
+                    {location.label}
+                  </option>
+                ))}
+              </select>
               <button onClick={() => handleUpdate(workout.id)}>Save</button>
               <button onClick={() => setEditingId(null)}>Cancel</button>
             </div>
@@ -102,7 +117,7 @@ const WorkoutList = ({ workouts, setWorkouts, onEditFinish, units }: WorkoutList
             <div>
               <p>
                 <strong>{workout.name}</strong> - {workout.amount}{" "}
-                {getUnitName(workout.unitId)}
+                {getUnitName(workout.unitId)} at {getLocationName(workout.locationId)}
               </p>
               <button onClick={() => handleEdit(workout)}>Edit</button>
               <button onClick={() => handleDelete(workout.id)}>Delete</button>

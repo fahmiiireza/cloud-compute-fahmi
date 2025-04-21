@@ -6,6 +6,7 @@ import WorkoutList from "../components/WorkoutList";
 import AddWorkout from "../components/AddWorkout";
 import { getWorkouts, Workout } from "../services/workoutService";
 import { getWorkoutUnits, WorkoutUnit } from "../services/unitService";
+import { getLocations, Location } from "../services/locationService";
 import { toast } from "react-toastify";
 import "./Home.css";
 
@@ -13,6 +14,7 @@ const Home = () => {
   console.log("Home component is rendering...");
   const [workouts, setWorkouts] = useState<Workout[]>([]);
   const [units, setUnits] = useState<WorkoutUnit[]>([]);
+  const [locations, setLocations] = useState<Location[]>([]);
   const navigate = useNavigate();
 
   const fetchWorkouts = async () => {
@@ -27,13 +29,21 @@ const Home = () => {
   const fetchWorkoutUnits = async () => {
     try {
       const data = await getWorkoutUnits();
-      console.log("🏋️ Units fetched in Home:", data); // 👈 debug log
+      console.log("🏋️ Units fetched in Home:", data);
       setUnits(data);
     } catch (error) {
       toast.error("Failed to load workout units");
     }
   };
-  
+
+  const fetchLocations = async () => {
+    try {
+      const data = await getLocations();
+      setLocations(data);
+    } catch (error) {
+      toast.error("Failed to load locations");
+    }
+  };
 
   const handleLogout = async () => {
     try {
@@ -52,6 +62,7 @@ const Home = () => {
       } else {
         fetchWorkouts();
         fetchWorkoutUnits();
+        fetchLocations();
       }
     });
 
@@ -65,12 +76,13 @@ const Home = () => {
         <button className="logout-button" onClick={handleLogout}>Logout</button>
       </header>
 
-      <AddWorkout onWorkoutAdded={fetchWorkouts} units={units} />
+      <AddWorkout onWorkoutAdded={fetchWorkouts} units={units} locations={locations} />
       <WorkoutList
         workouts={workouts}
         setWorkouts={setWorkouts}
         onEditFinish={fetchWorkouts}
         units={units}
+        locations={locations}
       />
     </div>
   );
